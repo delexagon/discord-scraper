@@ -24,7 +24,7 @@ def sort_all(alldata):
     
 def print_data(datum):
     print(datum['author']['username'] + " " + datum['id'] + ', ' + datum['timestamp'])
-    print('>>> ' + datum['content'])
+    print('>>> ' + datum['content'].replace('\n', '\n>>> '))
     a = False
     if datum['edited_timestamp'] != None:
         print('edited', end=' ')
