@@ -9,3 +9,4 @@ scroll all the way up
 run the extract messages script  
 have fun  
 recommended: check that there are the right number of messages  
+almost certainly will not work on 'complicated' features (weren't in the dataset i used it on)  
