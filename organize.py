@@ -1,6 +1,5 @@
 #!/bin/python3
 
-from localutils.misc import once
 from datetime import datetime
 import json
 import sys
