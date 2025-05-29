@@ -26,6 +26,16 @@ def read_file(str_, alldata):
             alldata[int(item['id'])] = item
     
 def print_data(datum, last_user, all):
+    if datum['type'] == 7 and datum['content'] == '':
+        nn = f"\n{name(datum)} ({datum['author']['username']})"
+        print(f"{(nn + ' has entered the server.').ljust(56)} {datetime.strftime(datum['timestamp'], '%d/%m/%Y, %H:%M UTC')}")
+        return None
+    if datum['type'] == 19 and datum['content'] == '':
+        nn1 = f"{name(datum)}"
+        nn2 = f"{name(datum['referenced_message'])}"
+        s1 = f"{nn1} waves to {nn2}."
+        print(f"\n{s1.ljust(55)} {datetime.strftime(datum['timestamp'], '%d/%m/%Y, %H:%M UTC')}")
+        return None
     repeat_user = True
     if datum['author']['username'] != last_user:
         print(f"\n{name(datum)} ({datum['author']['username']})")
@@ -36,8 +46,6 @@ def print_data(datum, last_user, all):
         lines = textwrap.wrap(line, 50, replace_whitespace=False)
         if len(lines) > 0:
             lines[0] = (lines[0],)
-        else:
-            print("<no message text>")
         wrap.extend(lines)
     
     metadata = []
@@ -49,7 +57,12 @@ def print_data(datum, last_user, all):
             id_ = int(datum['message_reference']['message_id'])
         if id_ in all:
             old_msg = all[id_]
-            p = name(old_msg)[:10] + ': ' + old_msg['content'][:15].replace('\n',' ')+'...'
+            p1 = name(old_msg)[:10] + ': '
+            if len(old_msg['content']) > 30-len(p1):
+                p2 = old_msg['content'][:30-len(p1)-2].replace('\n',' ')+'..'
+            else:
+                p2 = old_msg['content']
+            p = p1+p2
         else:
             p = 'reply unknown'
         metadata.append(p)
@@ -64,7 +77,6 @@ def print_data(datum, last_user, all):
         reactions = [(reaction['emoji']['name'], reaction['count']) for reaction in datum['reactions']]
     else:
         reactions = None
-    
         
     str_ = ''
     for line, md in itertools.zip_longest(wrap, metadata, fillvalue=''):
@@ -76,7 +88,7 @@ def print_data(datum, last_user, all):
     print(str_,end='')
     if reactions != None:
         for reaction in reactions:
-            print(reaction[0]+str(reaction[1])+' ', end='')
+            print(reaction[0]+(str(reaction[1]) if reaction[1] > 1 else '')+' ', end='')
         print()
     return last_user
 
